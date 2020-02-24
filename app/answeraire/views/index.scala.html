@@ -1,0 +1,62 @@
+@(str: String)(implicit request: RequestHeader)
+@main("Edit question") {
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    @* Here's where we render the page title `String`. *@
+    <title>Edit Question</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <script>
+      function submitQuestion() {
+	  fetch("/questions/", {
+	      method: 'post',
+	      mode: 'cors',
+	      credentials: 'same-origin', 
+	      headers: {
+		  'Content-Type': 'application/json',
+		  'Csrf-Token': '@helper.CSRF.getToken.value'
+	      },
+	      body: JSON.stringify(Object.fromEntries(new FormData(document.querySelector("#questionForm"))))
+	  }).then(function(response) {
+	      return response.json();
+	  }).then(function(data) {
+	      console.log(data);
+	  });
+      }
+    </script>
+
+  </head>
+  <body>
+    @* And here's where we render the `Html` object containing
+    * the page content. *@
+    <h1>Edit Question</h1>
+    <p>@str</p>
+    <form id="questionForm">
+      <div>
+	<label for="heading">Heading</label>
+	<input type="text" name="heading" id="heading">
+      </div>
+      <div>
+	<label for="subheading">Subheading</label>
+	<input type="text" name="subheading" id="subheading">
+      </div>
+      <div>
+	<label for="question">Question</label>
+	<input type="text" name="question" id="question" required>
+      </div>
+      <div>
+	<label for="answer">Answer: </label>
+	<input type="text" name="answer" id="answer" required>
+      </div>
+      <div>
+	<button onclick="submitQuestion()">submit</button>
+      </div>
+    </form>
+  </body>
+</html>
+
+
+}
+
+
