@@ -44,7 +44,6 @@ class QuestionActionBuilder @Inject()(messagesApi: MessagesApi,
 
   override def invokeBlock[A](request: Request[A],
                               block: QuestionRequestBlock[A]): Future[Result] = {
-    // Convert to marker context and use request in block
     logger.trace(s"invokeBlock: ")
 
     val future = block(new QuestionRequest(request, messagesApi))

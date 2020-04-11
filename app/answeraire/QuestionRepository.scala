@@ -35,8 +35,10 @@ class QuestionRepository @Inject()(database: Database,
 
   def create(data: Question): Future[Long] = {
     Future {
-      logger.trace(s"create: data = $data")
-      data.id
+      database.withConnection { implicit c =>
+        // todo convert this to insert
+        SQL"select q.id, heading, subheading, question, answer from question q, answer a where a.id=q.answer_id and q.id = $questionId".as(parser.singleOpt)
+      }
     }(ec)
   }
 

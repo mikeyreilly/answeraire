@@ -60,13 +60,18 @@ class QuestionController @Inject()(cc: QuestionControllerComponents)(
 
   private def processJsonQuestion[A]()(
     implicit request: QuestionRequest[A]): Future[Result] = {
-    logger.warn(s"request=$request")
+    //val st = request.getClass.getMethods.map(_.getName).sorted.reduce(_ + ","+_)
+    //val st = request.attrs.toString
+    // val st2 = request.body
+    // val st2 :      play.api.libs.json.JsValue = request.body.asJson
+    // logger.warn(s"request=$st2")
     def failure(badForm: Form[QuestionFormInput]) = {
       Future.successful(BadRequest(badForm.errorsAsJson))
     }
 
     def success(input: QuestionFormInput) = {
       questionResourceHandler.create(input).map { question =>
+        logger.warn(s"q=$question")
         Created(Json.toJson(question)).withHeaders(LOCATION -> question.link)
       }
     }
